@@ -80,9 +80,6 @@ const views = {
   mood: "moodView",
   friend: "friendView"
 };
-const views = {
-  ...
-};
 
 function updateOverallFinance() {
   const overall = Number($("overallSavings")?.value || 0);
@@ -1223,5 +1220,6 @@ if (avatarWrap && avatarInput && userAvatar) {
 
 
 }
+
 
 
