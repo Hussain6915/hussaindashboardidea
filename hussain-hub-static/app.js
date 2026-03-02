@@ -73,12 +73,12 @@ const views = {
   todo: "todoView",
   notes: "notesView",
   finance: "financeView",
+  overall: "overallView",
   plans: "plansView",
   focus: "focusView",
   water: "waterView",
   mood: "moodView",
   friend: "friendView"
-  overall: "overallView"
 };
 const views = {
   ...
@@ -1223,4 +1223,5 @@ if (avatarWrap && avatarInput && userAvatar) {
 
 
 }
+
 
