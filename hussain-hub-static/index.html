@@ -187,6 +187,10 @@
             <button class="menuBtn" data-nav="todo"><i data-lucide="check-circle-2"></i><span>To-Do</span></button>
             <button class="menuBtn" data-nav="notes"><i data-lucide="sticky-note"></i><span>Notes</span></button>
             <button class="menuBtn" data-nav="finance"><i data-lucide="bar-chart-3"></i><span>Finance</span></button>
+            <button class="menuBtn" data-nav="overall">
+  <i data-lucide="banknote"></i>
+  <span>Overall Finance</span>
+</button>
             <button class="menuBtn" data-nav="plans"><i data-lucide="map"></i><span>Plans</span></button>
             <button class="menuBtn" data-nav="focus"><i data-lucide="timer"></i><span>Focus</span></button>
             <button class="menuBtn" data-nav="water"><i data-lucide="droplets"></i><span>Water</span></button>
@@ -328,9 +332,23 @@
               </label>
 
               <label class="field">
-                <span>Daily Expense (per day)</span>
-                <input id="finDaily" type="number" placeholder="e.g., 500" />
-              </label>
+  <span>Daily Expense Monthly</span>
+  <input id="dailyMonthly" type="number" />
+</label>
+
+<label class="field">
+  <span>Daily Expense (Auto)</span>
+  <input id="dailyAuto" type="number" readonly />
+</label>
+
+<label class="field">
+  <span>Record Today Expense</span>
+  <input id="todayExpenseInput" type="number" placeholder="Enter amount" />
+</label>
+
+<button class="btn btn-ghost" id="recordTodayExpense">
+  Record Today
+</button>
 
               <div class="divider"></div>
 
@@ -354,6 +372,21 @@
               </div>
 
               <div class="chips" id="serviceChips"></div>
+              <div class="divider"></div>
+
+<h3 class="h3">Expense List</h3>
+
+<table class="financeTable">
+  <thead>
+    <tr>
+      <th>Expense</th>
+      <th>Amount</th>
+      <th>Note</th>
+      <th>Done</th>
+    </tr>
+  </thead>
+  <tbody id="expenseTableBody"></tbody>
+</table>
 
               <div class="divider"></div>
 
@@ -405,7 +438,38 @@
           </div>
         </div>
       </section>
+<section id="overallView" class="hidden">
+  <div class="card">
+    <div class="card-head row">
+      <h2 class="h2">Overall Finance</h2>
+      <button class="btn btn-ghost" data-nav="home">
+        <i data-lucide="home"></i> Home
+      </button>
+    </div>
 
+    <div class="formGrid">
+      <label class="field">
+        <span>Total Balance</span>
+        <input id="overallBalance" type="number" />
+      </label>
+
+      <label class="field">
+        <span>Savings Overall</span>
+        <input id="overallSavings" type="number" />
+      </label>
+
+      <label class="field">
+        <span>Savings Monthly (Auto from Finance)</span>
+        <input id="monthlySavingsAuto" readonly />
+      </label>
+
+      <label class="field">
+        <span>Total Savings</span>
+        <input id="totalSavingsAuto" readonly />
+      </label>
+    </div>
+  </div>
+</section>
       <!-- Plans -->
       <section id="plansView" class="hidden">
         <div class="card">
@@ -730,4 +794,5 @@
 </body>
 
 </html>
+
 
