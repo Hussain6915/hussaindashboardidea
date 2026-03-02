@@ -12,6 +12,9 @@ import {
   deleteDoc, query, where, orderBy,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+import {
+  getStorage
+} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
 
 const auth = window.__firebase.auth;
 const db = window.__firebase.db;
@@ -1112,5 +1115,6 @@ if (avatarWrap && avatarInput && userAvatar) {
       { merge: true }
     );
   });
+
 
 }
