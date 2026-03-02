@@ -551,9 +551,9 @@ renderExpenseTable();
 });
 
 function recalcFinancePreview() {
-  const balance = Number($("finBalance").value || 0);
-  const daily = Number($("finDaily").value || 0);
-
+ const dailyMonthly = Number($("dailyMonthly")?.value || 0);
+const dailyTotalMonth = dailyMonthly;
+  
   const servicesTotal = sum(finServices);
   const customsTotal = sum(finCustoms);
   const dailyTotalMonth = daily * 30; // daily expense per day -> monthly
@@ -588,8 +588,10 @@ function recalcFinancePreview() {
   });
 }
 
-["finBalance","finMonth"].forEach(id => {
-  $(id).addEventListener("input", recalcFinancePreview);
+["finBalance","finMonth","dailyMonthly"].forEach(id => {
+  if ($(id)) {
+    $(id).addEventListener("input", recalcFinancePreview);
+  }
 });
 $("dailyMonthly").addEventListener("input", () => {
   dailyMonthlyValue = Number($("dailyMonthly").value || 0);
@@ -1220,6 +1222,7 @@ if (avatarWrap && avatarInput && userAvatar) {
 
 
 }
+
 
 
 
