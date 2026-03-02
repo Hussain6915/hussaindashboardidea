@@ -536,4 +536,26 @@ select {
 }
 
 .avatarImg{width:100%;height:100%;object-fit:cover;display:block;}
+.financeTable {
+  width:100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.financeTable th,
+.financeTable td {
+  border:1px solid var(--stroke);
+  padding:10px;
+  text-align:left;
+  font-size:13px;
+}
+
+.financeTable th {
+  background: rgba(255,255,255,.05);
+}
+
+.doneTick {
+  cursor:pointer;
+  font-size:18px;
+}
 
