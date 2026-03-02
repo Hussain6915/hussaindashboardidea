@@ -78,7 +78,28 @@ const views = {
   water: "waterView",
   mood: "moodView",
   friend: "friendView"
+  overall: "overallView"
 };
+const views = {
+  ...
+};
+
+function updateOverallFinance() {
+  const overall = Number($("overallSavings")?.value || 0);
+  const monthly = Number(($("statSavings")?.textContent || "0").replace(/,/g,"")) || 0;
+
+  if ($("monthlySavingsAuto")) {
+    $("monthlySavingsAuto").value = monthly;
+  }
+
+  if ($("totalSavingsAuto")) {
+    $("totalSavingsAuto").value = overall + monthly;
+  }
+
+  if ($("tileSavings")) {
+    $("tileSavings").textContent = fmtMoney(overall + monthly);
+  }
+}
 
 function nav(to) {
   // hide all
@@ -441,6 +462,9 @@ function renderChips(el, items, onRemove) {
 
 let finServices = [];
 let finCustoms = [];
+let finExpensesTable = [];
+let remainingDays = 30;
+let dailyMonthlyValue = 0;
 
 $("addServiceBtn").addEventListener("click", () => {
   const name = $("serviceName").value;
@@ -461,6 +485,47 @@ $("addServiceBtn").addEventListener("click", () => {
   recalcFinancePreview();
   toast("Added subscription ✅");
 });
+function renderExpenseTable() {
+  const body = $("expenseTableBody");
+  body.innerHTML = "";
+
+  finExpensesTable.forEach((exp, index) => {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${exp.name}</td>
+      <td>${fmtMoney(exp.amount)}</td>
+      <td>
+        <input type="text" 
+               value="${exp.note}" 
+               placeholder="Add note..."
+               data-note="${index}" />
+      </td>
+      <td class="doneTick" data-done="${index}">
+        ${exp.done ? "✅" : "⬜"}
+      </td>
+    `;
+
+    body.appendChild(tr);
+  });
+
+  // Handle notes
+  body.querySelectorAll("[data-note]").forEach(input => {
+    input.addEventListener("input", (e) => {
+      const i = e.target.dataset.note;
+      finExpensesTable[i].note = e.target.value;
+    });
+  });
+
+  // Handle ticks (NO deduction)
+  body.querySelectorAll("[data-done]").forEach(cell => {
+    cell.addEventListener("click", () => {
+      const i = cell.dataset.done;
+      finExpensesTable[i].done = !finExpensesTable[i].done;
+      renderExpenseTable();
+    });
+  });
+}
 
 $("addCustomBtn").addEventListener("click", () => {
   const name = $("customName").value.trim();
@@ -468,7 +533,14 @@ $("addCustomBtn").addEventListener("click", () => {
   if (!name) return toast("Enter expense name");
   if (!amount || amount < 0) return toast("Enter amount");
 
-  finCustoms.push({ name, amount });
+ finCustoms.push({ name, amount });
+finExpensesTable.push({
+  name,
+  amount,
+  note: "",
+  done: false
+});
+renderExpenseTable();
   $("customName").value = "";
   $("customAmount").value = "";
 
@@ -519,8 +591,41 @@ function recalcFinancePreview() {
   });
 }
 
-["finBalance","finDaily","finMonth"].forEach(id => {
+["finBalance","finMonth"].forEach(id => {
   $(id).addEventListener("input", recalcFinancePreview);
+});
+$("dailyMonthly").addEventListener("input", () => {
+  dailyMonthlyValue = Number($("dailyMonthly").value || 0);
+
+  // calculate remaining days properly
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const totalDays = new Date(year, month + 1, 0).getDate();
+  remainingDays = totalDays - today.getDate() + 1;
+
+  if (remainingDays < 1) remainingDays = 1;
+
+  $("dailyAuto").value = (dailyMonthlyValue / remainingDays).toFixed(2);
+});
+$("recordTodayExpense").addEventListener("click", () => {
+  const val = Number($("todayExpenseInput").value || 0);
+  if (!val) return toast("Enter expense");
+
+  if (val > dailyMonthlyValue) {
+    return toast("Not enough monthly daily balance");
+  }
+
+  dailyMonthlyValue -= val;
+
+  remainingDays -= 1;
+  if (remainingDays < 1) remainingDays = 1;
+
+  $("dailyMonthly").value = dailyMonthlyValue;
+  $("dailyAuto").value = (dailyMonthlyValue / remainingDays).toFixed(2);
+
+  $("todayExpenseInput").value = "";
+  toast("Daily expense recorded ✅");
 });
 
 $("saveFinanceBtn").addEventListener("click", async () => {
@@ -1118,3 +1223,4 @@ if (avatarWrap && avatarInput && userAvatar) {
 
 
 }
+
